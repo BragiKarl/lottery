@@ -19,7 +19,6 @@ def index():
         participants = Participant.query.all()
     return render_template('index.html', participants=participants, deleted=request.args.get('deleted'))
 
-
 @app.route('/enter_lottery', methods=['GET', 'POST'])
 def enter_lottery():
     global last_allocated_number  # Use the global last_allocated_number
@@ -45,18 +44,6 @@ def enter_lottery():
         return redirect(url_for('index'))
 
     return render_template('enter_lottery.html')
-
-@app.route('/delete/<int:participant_id>', methods=['POST'])
-def delete_participant(participant_id):
-    with app.app_context():
-        participant = Participant.query.get(participant_id)
-        if participant:
-            db.session.delete(participant)
-            db.session.commit()
-            return redirect(url_for('index', deleted=f"Participant with ID {participant_id} has been deleted."))
-        else:
-            return "Participant not found", 404
-
 
 if __name__ == '__main__':
     with app.app_context():  # Create an application context
